@@ -4,7 +4,7 @@ Apresentando Lua para as massas 30min
 Erros de Ruby oriundos de versões erradas de gems 45min
 Erros comuns em Ruby 45min
 Rails para usuários de Django lightning
-Trabalho remoto: prós e cons 60min
+Trabalho remoto: prós e contras 60min
 Desenvolvimento orientado a gambiarras 45min
 Aplicações isomórficas: o futuro (que talvez nunca chegaremos) 30min
 Codifique menos, Escreva mais! 30min
