@@ -1,3 +1,7 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  resources :talks do
+    collection do
+      post 'import_from_txt'
+    end
+  end
 end
