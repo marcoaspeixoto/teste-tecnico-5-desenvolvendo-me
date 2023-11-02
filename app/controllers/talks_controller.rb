@@ -35,6 +35,23 @@ class TalksController < ApplicationController
 
   private
 
+  def import_from_txt
+    file_path = 'TT: 5 - proposals.txt'
+
+    File.open(file_path, 'r').each_line do |line|
+      # Use uma expressão regular para identificar linhas com "lightning" no final
+      if line =~ /^(.+?) (\d+)min$|(.*?)lightning$/
+        name = Regexp.last_match(1) || Regexp.last_match(3)
+        duration = Regexp.last_match(2) || 5
+
+        # Crie um novo registro no banco de dados
+        Talk.create(name: name.strip, duration: duration.to_i)
+      end
+    end
+
+    redirect_to talks_path, notice: 'Importação concluída com sucesso.'
+  end
+
   def set_talk
     @talk = Talk.find(params[:id])
   end
