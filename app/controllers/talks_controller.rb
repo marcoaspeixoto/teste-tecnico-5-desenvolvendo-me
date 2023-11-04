@@ -1,62 +1,36 @@
 class TalksController < ApplicationController
-  before_action :set_talk, only: [:show, :update, :destroy]
-  skip_before_action :verify_authenticity_token, only: [:import_from_txt]
+  skip_before_action :verify_authenticity_token, only: [:import]
 
-  def index
-    @talks = Talk.all
-    render json: @talks
-  end
+  def import
+    file_path = File.expand_path('TT: 5 - proposals.txt', Rails.root) # Caminho para o arquivo na pasta raiz
 
-  def show
-    render json: @talk
-  end
+    if File.exist?(file_path)
+      file_data = File.read(file_path)
+      organized_talks = organize_talks(file_data)
 
-  def create
-    @talk = Talk.new(talk_params)
+      # Salvar as palestras organizadas no banco de dados
+      Talk.delete_all # Limpa as palestras existentes, se houver
 
-    if @talk.save
-      render json: @talk, status: :created
+      lines = file_data.split("\n")
+      lines.each do |line|
+        match_data = line.match(/^(.+?) (\d+min|lightning)$/)
+        if match_data
+          name, duration = match_data.captures
+          Talk.create(name: name, duration: duration, day: nil) # Substitua nil pelo dia correto
+        else
+          # Lidar com linhas que não correspondem à expressão regular, se necessário
+        end
+      end
+
+      render json: { message: 'Palestras importadas e organizadas com sucesso' }
     else
-      render json: @talk.errors, status: :unprocessable_entity
+      render json: { error: 'Arquivo não encontrado' }, status: :not_found
     end
-  end
-
-  def update
-    if @talk.update(talk_params)
-      render json: @talk
-    else
-      render json: @talk.errors, status: :unprocessable_entity
-    end
-  end
-
-  def destroy
-    @talk.destroy
   end
 
   private
 
-  def import_from_txt
-    file_path = 'TT: 5 - proposals.txt'
-
-    File.open(file_path, 'r').each_line do |line|
-      # Use uma expressão regular para identificar linhas com "lightning" no final
-      if line =~ /^(.+?) (\d+)min$|(.*?)lightning$/
-        name = Regexp.last_match(1) || Regexp.last_match(3)
-        duration = Regexp.last_match(2) || 5
-
-        # Crie um novo registro no banco de dados
-        Talk.create(name: name.strip, duration: duration.to_i)
-      end
-    end
-
-    redirect_to talks_path, notice: 'Importação concluída com sucesso.'
-  end
-
-  def set_talk
-    @talk = Talk.find(params[:id])
-  end
-
-  def talk_params
-    params.require(:talk).permit(:name, :duration)
+  def organize_talks(file_data)
+    # Implemente a organização das palestras a partir dos dados do arquivo
   end
 end
