@@ -10,13 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_11_01_192837) do
+ActiveRecord::Schema.define(version: 2023_11_04_200451) do
 
   create_table "talks", force: :cascade do |t|
     t.string "name"
     t.integer "duration"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "day"
   end
 
 end
