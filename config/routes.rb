@@ -2,7 +2,6 @@ Rails.application.routes.draw do
   resources :talks do
     collection do
       get 'index'
-      post 'import_from_txt'
     end
   end
 
