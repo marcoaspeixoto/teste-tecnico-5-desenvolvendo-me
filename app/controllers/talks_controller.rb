@@ -1,6 +1,12 @@
 class TalksController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:import]
 
+  def index
+    @talks = Talk.all
+
+    render json: @talks
+  end
+
   def import
     file_path = File.expand_path('TT: 5 - proposals.txt', Rails.root) # Caminho para o arquivo na pasta raiz
 
