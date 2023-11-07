@@ -20,5 +20,4 @@ ActiveRecord::Schema.define(version: 2023_11_06_210937) do
     t.string "day"
     t.time "start_time"
   end
-
 end

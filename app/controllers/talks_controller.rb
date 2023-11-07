@@ -8,35 +8,65 @@ class TalksController < ApplicationController
   end
 
   def import
-    file_path = File.expand_path('TT: 5 - proposals.txt', Rails.root) # Caminho para o arquivo na pasta raiz
+    file_data = File.read('TT: 5 - proposals.txt') # Lê o conteúdo do arquivo
+    organized_talks = organize_talks(file_data)
 
-    if File.exist?(file_path)
-      file_data = File.read(file_path)
-      organized_talks = organize_talks(file_data)
+    Talk.destroy_all # Limpa todas as palestras existentes
 
-      # Salvar as palestras organizadas no banco de dados
-      Talk.delete_all # Limpa as palestras existentes, se houver
-
-      lines = file_data.split("\n")
-      lines.each do |line|
-        match_data = line.match(/^(.+?) (\d+min|lightning)$/)
-        if match_data
-          name, duration = match_data.captures
-          Talk.create(name: name, duration: duration, day: nil) # Substitua nil pelo dia correto
-        else
-          # Lidar com linhas que não correspondem à expressão regular, se necessário
-        end
-      end
-
-      render json: { message: 'Palestras importadas e organizadas com sucesso' }
-    else
-      render json: { error: 'Arquivo não encontrado' }, status: :not_found
+    organized_talks.each do |talk_data|
+      Talk.create(
+        name: talk_data[:name],
+        duration: talk_data[:duration],
+        day: talk_data[:day],
+        start_time: talk_data[:start_time]
+      )
     end
+
+    render json: { message: 'Palestras importadas e organizadas com sucesso' }
   end
 
   private
 
   def organize_talks(file_data)
-    # Implemente a organização das palestras a partir dos dados do arquivo
+    organized_talks = []
+    current_time = Time.new(Time.now.year, Time.now.month, Time.now.day, 9, 0) # Começa às 9h
+
+    file_data.each_line do |line|
+      next if line.strip.empty? # Ignora linhas em branco
+
+      match_data = line.match(/^(.+?) (\d+min|lightning)$/)
+
+      if match_data
+        name, duration = match_data.captures
+
+        if duration == 'lightning'
+          duration_minutes = 5
+        else
+          duration_minutes = duration.to_i
+        end
+
+        organized_talks << { name: name, duration: duration_minutes, day: 'Dia A', start_time: current_time }
+
+        current_time += duration_minutes * 60 # Adiciona a duração em segundos
+
+        # Verifica se a sessão da manhã chegou ao fim
+        if current_time >= Time.new(Time.now.year, Time.now.month, Time.now.day, 12, 0)
+          organized_talks << { name: 'Almoço', duration: 60, day: 'Dia A', start_time: current_time }
+          current_time = Time.new(Time.now.year, Time.now.month, Time.now.day, 13, 0) # Inicia a tarde às 13h
+        end
+      else
+        # Lidar com linhas que não correspondem ao padrão esperado
+        # Por exemplo, você pode registrar essas linhas em um arquivo de log ou tratá-las de outra forma adequada
+      end
+    end
+
+    # Adiciona o evento de networking no final da tarde
+    if current_time >= Time.new(Time.now.year, Time.now.month, Time.now.day, 16, 0)
+      organized_talks << { name: 'Evento de Networking', duration: 60, day: 'Dia A', start_time: current_time }
+    end
+
+    puts organized_talks
+
+    organized_talks
   end
 end
