@@ -49,14 +49,18 @@ class TalksController < ApplicationController
           duration_minutes = duration.to_i
         end
 
-        if current_time_day_a < Time.new(Time.now.year, Time.now.month, Time.now.day, 12, 0)
-          if current_time_day_a + duration_minutes * 60 <= Time.new(Time.now.year, Time.now.month, Time.now.day, 13, 0)
+        # Adiciona as palestras no dia A
+        if current_time_day_a <= Time.new(Time.now.year, Time.now.month, Time.now.day, 12, 0)
+          if current_time_day_a + duration_minutes * 60 <= Time.new(Time.now.year, Time.now.month, Time.now.day, 12, 0)
             organized_talks_day_a << { name: name, duration: duration_minutes, day: 'Dia A', start_time: current_time_day_a }
             current_time_day_a += duration_minutes * 60
           else
             # Adiciona o almoço
             organized_talks_day_a << { name: 'Almoço', duration: 60, day: 'Dia A', start_time: current_time_day_a }
             current_time_day_a = Time.new(Time.now.year, Time.now.month, Time.now.day, 13, 0) # Inicia a tarde às 13h
+            # Adiciona a palestra após o almoço
+            organized_talks_day_a << { name: name, duration: duration_minutes, day: 'Dia A', start_time: current_time_day_a }
+            current_time_day_a += duration_minutes * 60
           end
         elsif current_time_day_a < Time.new(Time.now.year, Time.now.month, Time.now.day, 17, 0)
           # Verifica se a próxima palestra cabe no tempo restante do dia atual antes das 17h
