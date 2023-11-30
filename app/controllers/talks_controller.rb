@@ -22,8 +22,6 @@ class TalksController < ApplicationController
       )
     end
 
-
-
     render json: { message: 'Palestras importadas e organizadas com sucesso' }
   end
 
@@ -35,7 +33,9 @@ class TalksController < ApplicationController
     current_time_day_a = Time.new(Time.now.year, Time.now.month, Time.now.day, 9, 0) # Começa às 9h no Dia A
     current_time_day_b = Time.new(Time.now.year, Time.now.month, Time.now.day, 9, 0) # Começa às 9h no Dia B
 
-    file_data.each_line do |line|
+    file_data.each_line.with_index do |line, index|
+      last_line = index == file_data.each_line.count - 1 # armazena true caso seja a última linha
+
       next if line.strip.empty? # Ignora linhas em branco
 
       match_data = line.match(/^(.+?) (\d+min|lightning)$/)
@@ -59,7 +59,8 @@ class TalksController < ApplicationController
             organized_talks_day_a << { name: 'Almoço', duration: 60, day: 'Dia A', start_time: current_time_day_a }
             current_time_day_a = Time.new(Time.now.year, Time.now.month, Time.now.day, 13, 0) # Inicia a tarde às 13h
             # Adiciona a palestra após o almoço
-            organized_talks_day_a << { name: name, duration: duration_minutes, day: 'Dia A', start_time: current_time_day_a }
+            organized_talks_day_a << { name: name, duration: duration_minutes, day: 'Dia A',
+                                       start_time: Time.new(Time.now.year, Time.now.month, Time.now.day, 12, 0) }
             current_time_day_a += duration_minutes * 60
           end
         elsif current_time_day_a < Time.new(Time.now.year, Time.now.month, Time.now.day, 17, 0)
@@ -71,6 +72,34 @@ class TalksController < ApplicationController
             # Adiciona o evento de networking
             organized_talks_day_a << { name: 'Evento de Networking', duration: 60, day: 'Dia A', start_time: current_time_day_a }
             current_time_day_a = Time.new(Time.now.year, Time.now.month, Time.now.day, 17, 0) # Inicia o networking entre 16h e 17h
+            # Adiciona palestra no dia seguinte
+            organized_talks_day_b << { name: name, duration: duration_minutes, day: 'Dia B', start_time: current_time_day_b }
+            current_time_day_b += duration_minutes * 60
+          end
+       # Adiciona as palestras no dia B
+        elsif current_time_day_b <= Time.new(Time.now.year, Time.now.month, Time.now.day, 12, 0)
+          if current_time_day_b + duration_minutes * 60 <= Time.new(Time.now.year, Time.now.month, Time.now.day, 12, 0)
+            organized_talks_day_b << { name: name, duration: duration_minutes, day: 'Dia B', start_time: current_time_day_b }
+            current_time_day_b += duration_minutes * 60
+          else
+            # Adiciona o almoço
+            organized_talks_day_b << { name: 'Almoço', duration: 60, day: 'Dia B',
+                                       start_time: Time.new(Time.now.year, Time.now.month, Time.now.day, 12, 0) }
+            current_time_day_b = Time.new(Time.now.year, Time.now.month, Time.now.day, 12, 0) # Inicia a tarde às 13h
+            # Adiciona a palestra após o almoço
+            organized_talks_day_b << { name: name, duration: duration_minutes, day: 'Dia B', start_time: current_time_day_b }
+            current_time_day_b += duration_minutes * 60
+          end
+        elsif current_time_day_b < Time.new(Time.now.year, Time.now.month, Time.now.day, 17, 0)
+          # Verifica se a próxima palestra cabe no tempo restante do dia atual antes das 17h
+          if current_time_day_b + duration_minutes * 60 <= Time.new(Time.now.year, Time.now.month, Time.now.day, 17, 0)
+            organized_talks_day_b << { name: name, duration: duration_minutes, day: 'Dia B', start_time: current_time_day_b }
+            current_time_day_b += duration_minutes * 60
+            # Adiciona o evento de networking caso seja a linha contendo a última palestra
+            if last_line
+            organized_talks_day_b << { name: 'Evento de Networking', duration: 60, day: 'Dia B', start_time: current_time_day_b }
+            current_time_day_b = Time.new(Time.now.year, Time.now.month, Time.now.day, 17, 0) # Inicia o networking entre 16h e 17h
+            end
           end
         end
 
@@ -80,6 +109,6 @@ class TalksController < ApplicationController
       end
     end
 
-    organized_talks_day_a
+    organized_talks_day_a + organized_talks_day_b
   end
 end
