@@ -56,11 +56,11 @@ class TalksController < ApplicationController
             current_time_day_a += duration_minutes * 60
           else
             # Adiciona o almoço
-            organized_talks_day_a << { name: 'Almoço', duration: 60, day: 'Dia A', start_time: current_time_day_a }
+            organized_talks_day_a << { name: 'Almoço', duration: 60, day: 'Dia A',
+                                       start_time: Time.new(Time.now.year, Time.now.month, Time.now.day, 12, 0) }
             current_time_day_a = Time.new(Time.now.year, Time.now.month, Time.now.day, 13, 0) # Inicia a tarde às 13h
             # Adiciona a palestra após o almoço
-            organized_talks_day_a << { name: name, duration: duration_minutes, day: 'Dia A',
-                                       start_time: Time.new(Time.now.year, Time.now.month, Time.now.day, 12, 0) }
+            organized_talks_day_a << { name: name, duration: duration_minutes, day: 'Dia A', start_time: current_time_day_a}
             current_time_day_a += duration_minutes * 60
           end
         elsif current_time_day_a < Time.new(Time.now.year, Time.now.month, Time.now.day, 17, 0)
@@ -85,7 +85,7 @@ class TalksController < ApplicationController
             # Adiciona o almoço
             organized_talks_day_b << { name: 'Almoço', duration: 60, day: 'Dia B',
                                        start_time: Time.new(Time.now.year, Time.now.month, Time.now.day, 12, 0) }
-            current_time_day_b = Time.new(Time.now.year, Time.now.month, Time.now.day, 12, 0) # Inicia a tarde às 13h
+            current_time_day_b = Time.new(Time.now.year, Time.now.month, Time.now.day, 13, 0) # Inicia a tarde às 13h
             # Adiciona a palestra após o almoço
             organized_talks_day_b << { name: name, duration: duration_minutes, day: 'Dia B', start_time: current_time_day_b }
             current_time_day_b += duration_minutes * 60
