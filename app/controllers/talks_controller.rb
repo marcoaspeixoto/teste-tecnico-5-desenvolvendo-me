@@ -1,5 +1,6 @@
 class TalksController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:import]
+  before_action :set_talk, only: [:show, :update, :destroy]
 
   def index
     @talks = Talk.all
@@ -14,12 +15,7 @@ class TalksController < ApplicationController
     Talk.destroy_all # Limpa todas as palestras existentes
 
     organized_talks.each do |talk_data|
-      Talk.create(
-        name: talk_data[:name],
-        duration: talk_data[:duration],
-        day: talk_data[:day],
-        start_time: talk_data[:start_time]
-      )
+      Talk.create(talk_data)
     end
 
     render json: { message: 'Palestras importadas e organizadas com sucesso' }
