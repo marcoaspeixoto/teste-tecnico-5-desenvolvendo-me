@@ -39,11 +39,12 @@ class Business
           if current_time + duration_minutes * 60 <= Time.new(Time.now.year, Time.now.month, Time.now.day, 17, 0)
             organized_talks << { name: name, duration: duration_minutes, day: "#{day}", start_time: current_time }
             current_time += duration_minutes * 60
+            # se for a última palestra do arquivo adiciona o evento de networking
             if last_line
               organized_talks << { name: 'Evento de Networking', duration: 60, day: "#{day}", start_time: current_time }
             end
           else
-            # Adiciona o evento de networking
+            # Se sobrar palestras ao final do dia atual adiciona o evento de networking
             organized_talks << { name: 'Evento de Networking', duration: 60, day: "#{day}", start_time: current_time }
             # Adiciona palestra no dia seguinte
             day.next!
@@ -62,4 +63,3 @@ class Business
     organized_talks
   end
 end
-
