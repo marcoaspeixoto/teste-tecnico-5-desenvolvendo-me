@@ -1,6 +1,5 @@
 class TalksController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:import]
-  before_action :set_talk, only: [:show, :update, :destroy]
 
   def index
     @talks = Talk.all
@@ -8,8 +7,18 @@ class TalksController < ApplicationController
     render json: @talks
   end
 
+  def home
+
+  end
+
   def import
-    file_data = File.read('TT: 5 - proposals.txt') # Lê o conteúdo do arquivo
+    # Verifica se o parâmetro 'file' está presente na requisição
+    unless params[:file].present? && params[:file].respond_to?(:read)
+      render json: { error: 'Arquivo não encontrado na requisição' }, status: :bad_request
+      return
+    end
+
+    file_data = params[:file].read # Lê o conteúdo do arquivo da requisição
     organized_talks = Business.organize_talks(file_data)
 
     Talk.destroy_all # Limpa todas as palestras existentes
