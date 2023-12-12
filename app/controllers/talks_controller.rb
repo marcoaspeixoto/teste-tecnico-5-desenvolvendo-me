@@ -4,17 +4,27 @@ class TalksController < ApplicationController
   def index
     @talks = Talk.all
 
-    render json: @talks
+    respond_to do |format|
+      format.html
+      format.json { render json: @talks }
+    end
   end
 
   def home
-
+    @import_success_message = flash[:import_success_message]
   end
 
   def import
     # Verifica se o parâmetro 'file' está presente na requisição
     unless params[:file].present? && params[:file].respond_to?(:read)
-      render json: { error: 'Arquivo não encontrado na requisição' }, status: :bad_request
+      respond_to do |format|
+        format.html do
+          render plain: 'Arquivo não encontrado na requisição', status: :bad_request
+        end
+        format.json do
+          render json: { error: 'Arquivo não encontrado na requisição' }, status: :bad_request
+        end
+      end
       return
     end
 
@@ -27,6 +37,15 @@ class TalksController < ApplicationController
       Talk.create(talk_data)
     end
 
-    render json: { message: 'Palestras importadas e organizadas com sucesso' }
+    flash[:import_success_message] = 'Palestras importadas e organizadas com sucesso'
+
+    respond_to do |format|
+      format.html do
+        redirect_to root_path
+      end
+      format.json do
+        render json: { message: 'Palestras importadas e organizadas com sucesso' }
+      end
+    end
   end
 end

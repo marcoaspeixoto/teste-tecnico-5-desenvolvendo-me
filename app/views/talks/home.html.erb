@@ -1,5 +1,21 @@
-<h1>Bem-vindo à sua aplicação!</h1>
+<!DOCTYPE html>
+<html>
+<head>
+  <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          var flashMessage = '<%= flash[:import_success_message] %>';
+
+          if (flashMessage) {
+              alert(flashMessage);
+          }
+      });
+  </script>
+</head>
+<body>
+<h1>Bem-vindo ao organizador de palestras!</h1>
 <%= form_tag import_path, multipart: true do %>
   <%= file_field_tag :file %>
   <%= submit_tag 'Importar Palestras' %>
 <% end %>
+</body>
+</html>
