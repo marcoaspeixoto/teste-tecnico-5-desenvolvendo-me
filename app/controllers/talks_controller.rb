@@ -18,7 +18,7 @@ class TalksController < ApplicationController
       return
     end
 
-    file_data = params[:file].read # Lê o conteúdo do arquivo da requisição
+    file_data = File.read('TT: 5 - proposals.txt', encoding: 'ISO-8859-1') # Lê o conteúdo do arquivo da requisição
     organized_talks = Business.organize_talks(file_data)
 
     Talk.destroy_all # Limpa todas as palestras existentes
