@@ -1,0 +1,33 @@
+<!-- app/views/talks/schedule.html.erb -->
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<h1>Programação das Palestras</h1>
+
+<table>
+  <thead>
+  <tr>
+    <th>Dia</th>
+    <th>Horário</th>
+    <th>Nome</th>
+    <th>Duração (minutos)</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @scheduled_talks.each do |talk| %>
+    <tr>
+      <td><%= talk.day %></td>
+      <td><%= talk.start_time.strftime("%H:%M") %></td>
+      <td><%= talk.name %></td>
+      <td><%= talk.duration %></td>
+    </tr>
+  <% end %>
+  <br>
+  </tbody>
+</table>
+<br>
+<%= link_to 'Voltar para o Início', root_path %>
+</body>
+</html>

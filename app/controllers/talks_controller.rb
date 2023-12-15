@@ -10,6 +10,10 @@ class TalksController < ApplicationController
     end
   end
 
+  def schedule
+    @scheduled_talks = Talk.order(:day, :start_time)
+  end
+
   def home
     @import_success_message = flash[:import_success_message]
   end
@@ -28,7 +32,7 @@ class TalksController < ApplicationController
       return
     end
 
-    file_data = File.read('TT: 5 - proposals.txt', encoding: 'ISO-8859-1') # Lê o conteúdo do arquivo da requisição
+    file_data = params[:file].read.encode('UTF-8', 'ISO-8859-1') # Lê o conteúdo do arquivo da requisição
     organized_talks = Business.organize_talks(file_data)
 
     Talk.destroy_all # Limpa todas as palestras existentes
