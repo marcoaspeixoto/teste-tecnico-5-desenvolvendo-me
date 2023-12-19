@@ -11,12 +11,19 @@ class TalksController < ApplicationController
   end
 
   def schedule
-    @scheduled_talks = Talk.order(:day, :start_time)
+    @scheduled_talks = Talk.where.not(day: nil).order(:day, :start_time)
+
+    # Agrupar as palestras por dia
+    @grouped_talks = @scheduled_talks.group_by(&:day)
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @grouped_talks }
+    end
   end
 
   def home
     @import_success_message = flash[:import_success_message]
-    #flash[:import_success_message] = nil # Limpar a mensagem para evitar que ela persista após uma atualização da página
   end
 
   def import
@@ -40,12 +47,11 @@ class TalksController < ApplicationController
 
     respond_to do |format|
       format.html do
-        flash[:import_success_message] = 'Palestras importadas e organizadas com sucesso'
         redirect_to root_path
       end
 
       format.json do
-        render json: { message: 'Palestras importadas e organizadas com sucesso' }, status: :ok
+        render json: { message: flash[:import_success_message] }, status: :ok
       end
     end
   end
