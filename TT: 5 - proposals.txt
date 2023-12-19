@@ -1,19 +1,19 @@
-Diminuindo tempo de execuÃ§Ã£o de testes em aplicaÃ§Ãµes Rails enterprise 60min
-Reinventando a roda em ASP clÃ¡ssico 45min
+Diminuindo tempo de execução de testes em aplicações Rails enterprise 60min
+Reinventando a roda em ASP clássico 45min
 Apresentando Lua para as massas 30min
-Erros de Ruby oriundos de versÃµes erradas de gems 45min
+Erros de Ruby oriundos de versões erradas de gems 45min
 Erros comuns em Ruby 45min
-Rails para usuÃ¡rios de Django lightning
-Trabalho remoto: prÃ³s e contras 60min
+Rails para usuários de Django lightning
+Trabalho remoto: prós e cons 60min
 Desenvolvimento orientado a gambiarras 45min
-AplicaÃ§Ãµes isomÃ³rficas: o futuro (que talvez nunca chegaremos) 30min
+Aplicações isomórficas: o futuro (que talvez nunca chegaremos) 30min
 Codifique menos, Escreva mais! 30min
-ProgramaÃ§Ã£o em par 45min
-A mÃ¡gica do Rails: como ser mais produtivo 60min
-Ruby on Rails: Por que devemos deixÃ¡-lo para trÃ¡s 60min
-Clojure engoliu Scala: migrando minha aplicaÃ§Ã£o 45min
-Ensinando programaÃ§Ã£o nas grotas de MaceiÃ³ 30min
+Programação em par 45min
+A mágica do Rails: como ser mais produtivo 60min
+Ruby on Rails: Por que devemos deixá-lo para trás 60min
+Clojure engoliu Scala: migrando minha aplicação 45min
+Ensinando programação nas grotas de Maceió 30min
 Ruby vs. Clojure para desenvolvimento backend 30min
-ManutenÃ§Ã£o de aplicaÃ§Ãµes legadas em Ruby on Rails 60min
+Manutenção de aplicações legadas em Ruby on Rails 60min
 Um mundo sem StackOverflow 30min
-Otimizando CSS em aplicaÃ§Ãµes Rails 30min
+Otimizando CSS em aplicações Rails 30min
