@@ -66,7 +66,7 @@ Este projeto foi desenvolvido com as seguintes tecnologias:
 
 ## :page_facing_up: Documentação da API
 Acesse a documentação da API através do link:  
-https://lnkd.in/dCbTP_S7
+https://documenter.getpostman.com/view/23703927/2s9Ykq71H6
 
 <br>
 
