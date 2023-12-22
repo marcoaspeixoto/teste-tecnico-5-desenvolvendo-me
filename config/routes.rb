@@ -1,3 +1,6 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  root 'talks#home'
+  post '/import', to: 'talks#import'
+  get '/talks', to: 'talks#index'
+  get '/schedule', to: 'talks#schedule'
 end

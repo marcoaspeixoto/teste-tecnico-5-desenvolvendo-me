@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<h1>Programação das Palestras</h1>
+
+<% @grouped_talks.each do |day, talks| %>
+  <h2>Dia <%= day %></h2>
+
+  <table>
+    <thead>
+    <tr>
+      <th>Horário</th>
+      <th>Nome</th>
+      <th>Duração (minutos)</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% talks.each do |talk| %>
+      <tr>
+        <td><%= talk.start_time.strftime("%H:%M") %></td>
+        <td><%= talk.name %></td>
+        <td><%= talk.duration %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+  <br>
+<% end %>
+
+<%= link_to 'Voltar para o Início', root_path %>
+</body>
+</html>
